@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">GWeather App</string>
+    <string name="login_error">Incorrect username/password</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="signin">Sign-in</string>
+    <string name="register">Register</string>
+    <string name="create_account">Create Account</string>
+
+    <string name="invalid_email_format">Please enter a valid email.</string>
+    <string name="empty_password_error">Password cannot be empty.</string>
+    <string name="password_format_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="password_match_error">Passwords do not match.</string>
+    <string name="generic_error">An error has occurred</string>
+    <string name="try_again">Try again</string>
+    <string name="weather_history">Weather History</string>
+    <string name="account_creation_success">Account creation success</string>
+</resources>
