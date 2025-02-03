@@ -53,7 +53,7 @@ fun GWeatherApp() {
                     showSnackBar = snackBarHostState::showSnackbar
                 )
                 homeScreen(
-                    onSignOut = appState::popUp
+                    onSignOut = appState::clearAndNavigate
                 )
             }
         }

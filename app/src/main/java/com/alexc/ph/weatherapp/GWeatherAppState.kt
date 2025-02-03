@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.alexc.ph.weatherapp.ui.home.navigateToHome
 import com.alexc.ph.weatherapp.ui.login.navigateToLogin
 import com.alexc.ph.weatherapp.ui.signup.navigateToSignUp
+import com.alexc.ph.weatherapp.ui.splash.SplashRoute
 
 @Composable
 fun rememberAppState(
@@ -36,15 +37,8 @@ class GWeatherAppState(
         navController.navigateToHome()
     }
 
-    fun navigateAndPopUp(route: String, popUp: String) {
-        navController.navigate(route) {
-            launchSingleTop = true
-            popUpTo(popUp) { inclusive = true }
-        }
-    }
-
-    fun clearAndNavigate(route: String) {
-        navController.navigate(route) {
+    fun clearAndNavigate() {
+        navController.navigate(SplashRoute) {
             launchSingleTop = true
             popUpTo(0) { inclusive = true }
         }
