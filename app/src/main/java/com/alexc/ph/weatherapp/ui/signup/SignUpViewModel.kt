@@ -6,9 +6,7 @@ import com.alexc.ph.domain.SignUpUseCase
 import com.alexc.ph.domain.model.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,28 +15,38 @@ class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase
 ): ViewModel(){
 
-    private val _uiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Loading)
-    val uiState: StateFlow<SignUpUiState> = _uiState
+    var state = MutableStateFlow(SignUpState())
+        private set
 
-    fun signUp(email: String, password: String, repeatPassword: String) {
-        viewModelScope.launch {
-            signUpUseCase(email, password, repeatPassword)
-                .map {
-                    when (it) {
-                        is Result.Error -> SignUpUiState.Error(it.exception)
-                        Result.Loading -> SignUpUiState.Loading
-                        is Result.Success -> SignUpUiState.Success
-                    }
+    fun onAction(action: SignUpAction) {
+        when(action) {
+            is SignUpAction.OnEmailChange -> { state.update { it.copy(email = action.email, error = null) } }
+            is SignUpAction.OnPasswordChange -> state.update { it.copy(password = action.password, error = null) }
+            is SignUpAction.OnRepeatPasswordChange -> state.update { it.copy(repeatPassword = action.repeatPassword, error = null) }
+            is SignUpAction.OnSignUpClick -> {
+                viewModelScope.launch {
+                    signUpUseCase(action.email, action.password, action.repeatPassword)
+                        .collect { result ->
+                            when (result) {
+                                is Result.Error -> {
+                                    state.update {
+                                        it.copy(error = result.exception, isLoading = false, isSuccessSignUp = false)
+                                    }
+                                }
+                                Result.Loading -> {
+                                    state.update {
+                                        it.copy(isLoading = true)
+                                    }
+                                }
+                                is Result.Success -> {
+                                    state.update {
+                                        it.copy(isLoading = false, isSuccessSignUp = true)
+                                    }
+                                }
+                            }
+                        }
                 }
-                .catch { Result.Error(it) }
-                .collect { _uiState.value = it }
+            }
         }
     }
 }
-
-sealed interface SignUpUiState {
-    object Loading : SignUpUiState
-    object Success : SignUpUiState
-    data class Error(val error: Throwable) : SignUpUiState
-}
-

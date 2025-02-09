@@ -31,7 +31,12 @@ class SignUpUseCase @Inject constructor(
             emit(Result.Error(PasswordNotMatchException()))
             return@flow
         }
-        emit(Result.Success(authRepository.createAccount(email, password)))
+
+        try {
+            emit(Result.Success(authRepository.createAccount(email, password)))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+credentials = "1.5.0-rc01"
 jetbrainsKotlinxCoroutinesTest = "1.10.0"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
@@ -34,6 +35,8 @@ materialVersion = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 

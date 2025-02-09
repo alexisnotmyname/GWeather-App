@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -27,12 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alexc.ph.domain.common.InvalidEmailException
-import com.alexc.ph.domain.common.PasswordBlankException
+import com.alexc.ph.weatherapp.AccountManager
 import com.alexc.ph.weatherapp.R
+import com.alexc.ph.weatherapp.SignInResult
 import com.alexc.ph.weatherapp.ui.components.EmailField
 import com.alexc.ph.weatherapp.ui.components.LoadingScreen
 import com.alexc.ph.weatherapp.ui.components.PasswordField
+import com.alexc.ph.weatherapp.ui.components.getErrorMessage
 
 
 val SmallDp = 8.dp
@@ -40,18 +42,33 @@ val MediumDp = 16.dp
 
 @Composable
 fun LoginScreen(
+    accountManager: AccountManager,
     loginViewModel: LoginViewModel = hiltViewModel(),
     showSnackBar: suspend (message: String) -> Unit,
     navigateToHome: () -> Unit,
     navigateToSignUp: () -> Unit
 ) {
     var signingIn by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = isFocused) {
+        if(isFocused) {
+            val result = accountManager.signIn()
+            if(result is SignInResult.Success) {
+                signingIn = true
+                loginViewModel.login(result.email, result.password)
+            }
+        }
+    }
 
     LoginScreen(
         modifier = Modifier.fillMaxSize(),
         loginClick = { email, password ->
             signingIn = true
             loginViewModel.login(email, password)
+        },
+        onFocused = {
+            isFocused = it
         },
         signUpClick = navigateToSignUp
     )
@@ -72,14 +89,6 @@ fun LoginScreen(
         }
     }
 }
-@Composable
-fun getErrorMessage(exception: Throwable): String {
-    return when(exception) {
-        is InvalidEmailException -> stringResource(R.string.invalid_email_format)
-        is PasswordBlankException -> stringResource(R.string.empty_password_error)
-        else -> exception.message ?: stringResource(R.string.generic_error)
-    }
-}
 
 @Composable
 fun LoginScreen(
@@ -87,6 +96,7 @@ fun LoginScreen(
     loginError: Boolean = false,
     onLoginErrorDismiss:() -> Unit = {},
     loginClick: (email: String, password: String) -> Unit = { _, _ -> },
+    onFocused: (Boolean) -> Unit = {},
     signUpClick: () -> Unit = {}
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -106,7 +116,9 @@ fun LoginScreen(
                 if(loginError) onLoginErrorDismiss()
             },
             isError = loginError,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().onFocusChanged {
+                onFocused(it.isFocused)
+            }
         )
         Spacer(modifier = Modifier.height(SmallDp))
         PasswordField(
@@ -116,7 +128,9 @@ fun LoginScreen(
                 if(loginError) onLoginErrorDismiss()
             },
             isError = loginError,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().onFocusChanged {
+                onFocused(it.isFocused)
+            }
         )
         Spacer(modifier = Modifier.height(MediumDp))
 

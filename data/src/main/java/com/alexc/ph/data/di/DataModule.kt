@@ -2,7 +2,6 @@ package com.alexc.ph.data.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.alexc.ph.data.BuildConfig
 import com.alexc.ph.data.database.WeatherDatabase
 import com.alexc.ph.data.database.dao.WeatherHistoryDao
@@ -23,7 +22,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.Call
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

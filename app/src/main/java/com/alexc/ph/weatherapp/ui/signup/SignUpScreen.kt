@@ -17,12 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,45 +27,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alexc.ph.domain.common.InvalidEmailException
-import com.alexc.ph.domain.common.PasswordFormatInvalidException
-import com.alexc.ph.domain.common.PasswordNotMatchException
-import com.alexc.ph.domain.model.Result
+import com.alexc.ph.weatherapp.AccountManager
 import com.alexc.ph.weatherapp.R
 import com.alexc.ph.weatherapp.ui.components.EmailField
 import com.alexc.ph.weatherapp.ui.components.GWeatherTopAppBar
 import com.alexc.ph.weatherapp.ui.components.LoadingScreen
 import com.alexc.ph.weatherapp.ui.components.PasswordField
 import com.alexc.ph.weatherapp.ui.components.RepeatPasswordField
+import com.alexc.ph.weatherapp.ui.components.getErrorMessage
 import com.alexc.ph.weatherapp.ui.icons.GWeatherIcons
+import com.alexc.ph.weatherapp.ui.login.MediumDp
 
 @Composable
 fun SignUpScreen(
     onBackClick: () -> Unit,
     showSnackBar: suspend (message: String) -> Unit,
+    accountManager: AccountManager,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var signingUp by remember { mutableStateOf(false) }
-
+    val state by viewModel.state.collectAsStateWithLifecycle()
     SignUpScreen(
+        uiState = state,
         modifier = Modifier.fillMaxSize(),
         onBackClick = onBackClick,
-        onSignUpClick = { email, password, repeatPassword ->
-            signingUp = true
-            viewModel.signUp(email, password, repeatPassword)
-        },
+        onAction = viewModel::onAction
     )
 
-    val message = when(uiState) {
-        is SignUpUiState.Error -> getErrorMessage((uiState as SignUpUiState.Error).error)
-        else -> stringResource(R.string.account_creation_success)
-    }
-
-    if(signingUp) {
-        LaunchedEffect(uiState) {
+    val message = stringResource(R.string.account_creation_success)
+    LaunchedEffect(state.isSuccessSignUp) {
+        if(state.isSuccessSignUp) {
+            accountManager.signUp(state.email, state.password)
             showSnackBar(message)
-            signingUp = false
         }
     }
 }
@@ -77,18 +66,15 @@ fun SignUpScreen(
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
+    uiState: SignUpState,
     onBackClick: () -> Unit,
-    onSignUpClick: (String, String, String) -> Unit
+    onAction: (SignUpAction) -> Unit,
 ) {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var repeatPassword by rememberSaveable { mutableStateOf("") }
-
     val keyboardController = LocalSoftwareKeyboardController.current
     val fieldModifier = Modifier
         .fillMaxWidth()
         .padding(16.dp, 4.dp)
-
+    
     Box(modifier = modifier.fillMaxSize()){
         GWeatherTopAppBar(
             title = stringResource(R.string.register),
@@ -110,13 +96,21 @@ fun SignUpScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            EmailField(value = email, onNewValue = { email = it }, modifier = fieldModifier)
-            PasswordField(value = password, onNewValue = { password = it }, modifier = fieldModifier)
-            RepeatPasswordField(value = repeatPassword, onNewValue = { repeatPassword = it }, modifier = fieldModifier)
+            EmailField(value = uiState.email, onNewValue = { onAction(SignUpAction.OnEmailChange(it)) }, modifier = fieldModifier)
+            PasswordField(value = uiState.password, onNewValue = { onAction(SignUpAction.OnPasswordChange(it)) }, modifier = fieldModifier)
+            RepeatPasswordField(value = uiState.repeatPassword, onNewValue = { onAction(SignUpAction.OnRepeatPasswordChange(it)) }, modifier = fieldModifier)
 
+            if(uiState.error != null) {
+                Text(
+                    text = getErrorMessage(uiState.error),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = MediumDp)
+                )
+            }
             Button(
                 onClick = {
-                    onSignUpClick(email, password, repeatPassword)
+                    onAction(SignUpAction.OnSignUpClick(uiState.email, uiState.password, uiState.repeatPassword))
                     keyboardController?.hide()
 
                 },
@@ -128,25 +122,19 @@ fun SignUpScreen(
                 )
             }
         }
-    }
-}
 
-@Composable
-fun getErrorMessage(exception: Throwable): String {
-    return when(exception) {
-        is InvalidEmailException -> stringResource(R.string.invalid_email_format)
-        is PasswordFormatInvalidException -> stringResource(R.string.password_format_error)
-        is PasswordNotMatchException -> stringResource(R.string.password_match_error)
-        else -> exception.message ?: stringResource(R.string.generic_error)
+        if(uiState.isLoading) {
+            LoadingScreen(modifier = Modifier.align(Alignment.Center))
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview() {
-
     SignUpScreen(
+        uiState = SignUpState(),
         onBackClick = { },
-        onSignUpClick = { _, _, _ -> }
+        onAction = { }
     )
 }
