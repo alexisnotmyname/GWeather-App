@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexc.ph.weatherapp.utils.AccountManager
 import com.alexc.ph.weatherapp.R
@@ -37,13 +36,14 @@ import com.alexc.ph.weatherapp.ui.components.RepeatPasswordField
 import com.alexc.ph.weatherapp.ui.components.getErrorMessage
 import com.alexc.ph.weatherapp.ui.icons.GWeatherIcons
 import com.alexc.ph.weatherapp.ui.login.MediumDp
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignUpScreen(
     onBackClick: () -> Unit,
     showSnackBar: suspend (message: String) -> Unit,
     accountManager: AccountManager,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: SignUpViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     SignUpScreen(
