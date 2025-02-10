@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alexc.ph.weatherapp.AccountManager
+import com.alexc.ph.weatherapp.utils.AccountManager
 import com.alexc.ph.weatherapp.R
 import com.alexc.ph.weatherapp.ui.components.EmailField
 import com.alexc.ph.weatherapp.ui.components.GWeatherTopAppBar

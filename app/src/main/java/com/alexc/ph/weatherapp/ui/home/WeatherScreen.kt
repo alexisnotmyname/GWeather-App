@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +25,7 @@ import com.alexc.ph.domain.model.weather.WeatherInfo
 import com.alexc.ph.domain.utils.isEvening
 import com.alexc.ph.domain.utils.unixToLocalTime
 import com.alexc.ph.weatherapp.R
+import com.alexc.ph.weatherapp.ui.components.ContentImage
 
 @Composable
 fun WeatherScreen(
@@ -50,13 +53,13 @@ fun WeatherScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "$city, $country", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        Image(painter = weatherIcon, contentDescription = "Weather Icon")
-//        ContentImage(
-//            modifier = Modifier.size(80.dp),
-//            imageUrl = "https://openweathermap.org/img/wn/${weatherData.weather.first().icon}@2x.png",
-//            contentDescription = weatherData.weather.first().description,
-//            contentScale = ContentScale.FillBounds
-//        )
+//        Image(painter = weatherIcon, contentDescription = "Weather Icon")
+        ContentImage(
+            modifier = Modifier.size( 80.dp),
+            imageUrl = "https://openweathermap.org/img/wn/${weatherData.weather.first().icon}@2x.png",
+            contentDescription = weatherData.weather.first().description,
+            contentScale = ContentScale.FillBounds
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = weatherDescription, style = MaterialTheme.typography.bodySmall)
         Text(text = "Temperature: $temperature", style = MaterialTheme.typography.bodyLarge)

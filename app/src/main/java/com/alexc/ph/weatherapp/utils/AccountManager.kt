@@ -1,4 +1,4 @@
-package com.alexc.ph.weatherapp
+package com.alexc.ph.weatherapp.utils
 
 import android.app.Activity
 import androidx.credentials.CreatePasswordRequest

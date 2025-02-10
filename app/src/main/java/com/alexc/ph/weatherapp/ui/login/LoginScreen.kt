@@ -28,9 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alexc.ph.weatherapp.AccountManager
+import com.alexc.ph.weatherapp.utils.AccountManager
 import com.alexc.ph.weatherapp.R
-import com.alexc.ph.weatherapp.SignInResult
+import com.alexc.ph.weatherapp.utils.SignInResult
 import com.alexc.ph.weatherapp.ui.components.EmailField
 import com.alexc.ph.weatherapp.ui.components.LoadingScreen
 import com.alexc.ph.weatherapp.ui.components.PasswordField
@@ -67,9 +67,7 @@ fun LoginScreen(
             signingIn = true
             loginViewModel.login(email, password)
         },
-        onFocused = {
-            isFocused = it
-        },
+        onFocused = { isFocused = it },
         signUpClick = navigateToSignUp
     )
 
