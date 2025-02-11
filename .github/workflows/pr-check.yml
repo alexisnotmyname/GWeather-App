@@ -1,0 +1,46 @@
+name: Check PR
+
+# Controls when the workflow will run
+on:
+
+  # Triggers the workflow on push or pull request events but only for the specified branches
+  pull_request:
+    branches: [ develop, master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  unit-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      # Caches project dependencies, so we don't need to keep re-downloading on all builds
+      - name: Cache
+        uses: actions/cache@v2.1.7
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      # Sets up JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # Runs unit tests (without lint)
+      - name: Run unit tests
+        run: |
+          ./gradlew :app:testDebugUnitTest -x lint --stacktrace
+          ./gradlew :data:testDebugUnitTest -x lint --stacktrace
+          ./gradlew :domain:testDebugUnitTest -x lint --stacktrace

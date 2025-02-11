@@ -1,5 +1,5 @@
 # GWeather App
-
+# Testing CI
 A simple Weather App that allows users to view weather conditions and previous weather data. Supports Firebase authentication and fetches weather data using the OpenWeather API.
 
 ## Features
