@@ -38,6 +38,9 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Grant Execute Permission to Gradlew
+        run: chmod +x gradlew
+
       # Runs unit tests (without lint)
       - name: Run unit tests
         run: |
