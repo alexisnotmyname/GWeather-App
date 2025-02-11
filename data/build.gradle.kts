@@ -6,7 +6,7 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-val apiKey: String = project.findProperty("API_KEY") as String
+val apiKey: String = project.findProperty("API_KEY") as? String ?: System.getenv("API_KEY") ?: "default_api_key"
 android {
     namespace = "com.alexc.ph.data"
     compileSdk = libs.versions.compileSdk.get().toInt()

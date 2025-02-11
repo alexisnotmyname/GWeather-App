@@ -1,0 +1,46 @@
+name: Check PR
+
+# Controls when the workflow will run
+on:
+
+  # Triggers the workflow on push or pull request events but only for the specified branches
+  pull_request:
+    branches: [ develop, master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  unit-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      # Sets up JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Grant Execute Permission to Gradlew
+        run: chmod +x gradlew
+
+      - name: Setup google-services.json
+        run: |
+            echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
+
+      # Runs unit tests (without lint)
+      - name: Run unit tests
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          ./gradlew :app:testDebugUnitTest -x lint --stacktrace -PAPI_KEY=${{ secrets.API_KEY }}
+          ./gradlew :data:testDebugUnitTest -x lint --stacktrace -PAPI_KEY=${{ secrets.API_KEY }}
+          ./gradlew :domain:testDebugUnitTest -x lint --stacktrace -PAPI_KEY=${{ secrets.API_KEY }}
