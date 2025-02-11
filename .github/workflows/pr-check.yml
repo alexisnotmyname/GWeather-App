@@ -22,15 +22,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
-      # Caches project dependencies, so we don't need to keep re-downloading on all builds
-      - name: Cache
-        uses: actions/cache@v2.1.7
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
-
       # Sets up JDK
       - name: Set up JDK
         uses: actions/setup-java@v4.1.0
@@ -45,5 +36,5 @@ jobs:
       - name: Run unit tests
         run: |
           ./gradlew :app:testDebugUnitTest -x lint --stacktrace
-          ./gradlew :data:testDebugUnitTest -x lint --stacktrace
+          ./gradlew :data:testDebugUnitTest -x lint --stacktrace -PAPI_KEY=${{ secrets.API_KEY }}
           ./gradlew :domain:testDebugUnitTest -x lint --stacktrace
