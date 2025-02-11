@@ -8,17 +8,15 @@ import com.alexc.ph.domain.SignOutUseCase
 import com.alexc.ph.domain.model.Result
 import com.alexc.ph.domain.model.weather.Weather
 import com.alexc.ph.weatherapp.utils.LocationProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+
+class HomeViewModel(
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
     private val signOutUseCase: SignOutUseCase,
     private val saveWeatherHistoryUseCase: SaveWeatherHistoryUseCase,

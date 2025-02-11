@@ -1,9 +1,8 @@
 package com.alexc.ph.domain
 
 import com.alexc.ph.domain.repository.AuthRepository
-import javax.inject.Inject
 
-class SignOutUseCase @Inject constructor(
+class SignOutUseCase(
     private val authRepository: AuthRepository
 ) {
     operator fun invoke() {

@@ -11,9 +11,8 @@ import com.alexc.ph.domain.repository.WeatherRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class WeatherRepositoryImpl @Inject constructor(
+class WeatherRepositoryImpl(
     private val weatherService: WeatherService,
     private val weatherHistoryDao: WeatherHistoryDao
 ) : WeatherRepository {

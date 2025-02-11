@@ -1,6 +1,5 @@
 package com.alexc.ph.weatherapp.ui.splash
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,14 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexc.ph.weatherapp.R
 import com.alexc.ph.weatherapp.ui.components.LoadingScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SplashScreen(
-    splashViewModel: SplashViewModel = hiltViewModel(),
+    splashViewModel: SplashViewModel = koinViewModel(),
     navigateToHome: () -> Unit,
     navigateToSignIn:() -> Unit
 ) {

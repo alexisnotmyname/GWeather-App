@@ -58,10 +58,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    //Hilt
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.common)
-    ksp(libs.hilt.compiler)
+    //Koin
+    implementation(libs.koin.android)
 
     //Retrofit
     implementation(libs.kotlinx.serialization.json)

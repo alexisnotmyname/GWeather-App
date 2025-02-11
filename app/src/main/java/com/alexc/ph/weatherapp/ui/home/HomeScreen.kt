@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexc.ph.domain.model.weather.Coord
 import com.alexc.ph.domain.model.weather.Main
@@ -34,11 +33,12 @@ import com.alexc.ph.weatherapp.ui.components.GenericErrorScreen
 import com.alexc.ph.weatherapp.ui.components.LoadingScreen
 import com.alexc.ph.weatherapp.ui.home.history.WeatherHistoryScreen
 import com.alexc.ph.weatherapp.ui.icons.GWeatherIcons
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
     onSignOut: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = koinViewModel()
 ) {
     var showMessagePermissionDenied by remember { mutableStateOf(false) }
     RequestLocationPermissionUsingRememberLauncherForActivityResult(

@@ -5,9 +5,8 @@ import com.alexc.ph.domain.model.Result
 import com.alexc.ph.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(
+class AuthRepositoryImpl(
     private val firebaseAuth: FirebaseAuth,
     private val securePreferences: SecurePreferences
 ): AuthRepository {

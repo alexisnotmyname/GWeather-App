@@ -10,9 +10,8 @@ import com.alexc.ph.domain.common.passwordMatches
 import com.alexc.ph.domain.model.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class SignUpUseCase @Inject constructor(
+class SignUpUseCase(
     private val authRepository: AuthRepository
 ) {
     operator fun invoke(email: String, password: String, repeatPassword: String): Flow<Result<Unit>> = flow {

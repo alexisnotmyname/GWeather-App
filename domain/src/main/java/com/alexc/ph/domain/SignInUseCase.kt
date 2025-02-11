@@ -8,9 +8,8 @@ import com.alexc.ph.domain.model.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-import javax.inject.Inject
 
-class SignInUseCase @Inject constructor(
+class SignInUseCase(
     private val authRepository: AuthRepository
 ) {
     operator fun invoke(email: String, password: String): Flow<Result<String>> = flow {
