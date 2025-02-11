@@ -48,7 +48,7 @@ jobs:
 
       - name: Upload Test Reports
         if: always()  # Ensure report is uploaded even if tests fail
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: junit-test-reports
           path: '**/build/reports/tests/testDebugUnitTest/'  # Upload test reports
